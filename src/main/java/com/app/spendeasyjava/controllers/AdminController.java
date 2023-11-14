@@ -8,7 +8,7 @@ public class AdminController {
 
     @GetMapping
     public String get() {
-        return "GET:: admin controller";
+        return "GET:: admin controller!";
     }
 
     @PostMapping
