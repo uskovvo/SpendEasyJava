@@ -1,0 +1,34 @@
+services:
+  postgres:
+    container_name: db_spend_easy
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_spend_easy
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgres/data
+    networks:
+      - spend_easy_net
+
+  spring-boot-app:
+    container_name: spend_easy_app
+    image: spend_easy
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - spend_easy_net
+    depends_on:
+      postgres:
+        condition: service_started
+
+volumes:
+  postgres:
+
+networks:
+  spend_easy_net:
+    driver: bridge
