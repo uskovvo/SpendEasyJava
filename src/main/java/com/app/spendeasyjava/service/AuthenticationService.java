@@ -34,6 +34,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CategoriesServiceImpl categoriesService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -46,6 +47,8 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
+        savedUser.setCategories(categoriesService.createDefaultCategories(user));
+        userRepository.save(savedUser);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
