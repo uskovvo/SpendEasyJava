@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -37,6 +36,24 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user")
+    private List<Transactions> transactions;
+
+    @OneToMany(mappedBy = "user")
+    private List<Categories> categories;
+
+    @OneToMany(mappedBy = "user")
+    private List<Accounts> accounts;
+
+    @OneToMany(mappedBy = "user")
+    private List<Budget> budgets;
+
+    @OneToMany(mappedBy = "user")
+    private List<Statistics> statistics;
+
+    @OneToMany(mappedBy = "user")
+    private List<Goals> goals;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

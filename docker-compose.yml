@@ -1,5 +1,12 @@
+version: "3.9"
+
 services:
-  postgres:
+  service-db:
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -h service-db", "--quiet" ]
+      interval: 1s
+      timeout: 5s
+      retries: 9
     container_name: db_spend_easy
     image: postgres
     environment:
@@ -17,14 +24,15 @@ services:
     container_name: spend_easy_app
     image: spend_easy
     build:
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8085:8085"
     networks:
       - spend_easy_net
     depends_on:
-      postgres:
-        condition: service_started
+      service-db:
+        condition: service_healthy
 
 volumes:
   postgres:

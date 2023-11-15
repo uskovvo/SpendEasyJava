@@ -1,9 +1,10 @@
-FROM openjdk:17-jdk
-
+FROM maven:3.8-eclipse-temurin-19 as builder
 WORKDIR /app
+COPY . /app/.
+RUN mvn install -Pproduction
 
-COPY target/SpendEasyJava-0.0.1.jar /app/SpendEasy.jar
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "SpendEasy.jar"]
+FROM eclipse-temurin:19-jdk
+WORKDIR /app
+COPY --from=builder /app/target/*.jar /app/*.jar
+EXPOSE 8989
+ENTRYPOINT ["java", "-jar", "/app/*.jar", "--spring.profiles.active=preprod"]
