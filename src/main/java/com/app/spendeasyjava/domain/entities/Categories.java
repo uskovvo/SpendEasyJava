@@ -31,17 +31,14 @@ public class Categories {
     @Enumerated(EnumType.STRING)
     private CategoriesType categoriesType;
 
-    @Enumerated(EnumType.STRING)
-    private Set<DefaultCategories> defaultCategories;
-
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Transactions> transactions;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Budget> budgets;
 
 }

@@ -1,6 +1,6 @@
 package com.app.spendeasyjava.controllers;
 
-import com.app.spendeasyjava.domain.DTO.ChangePasswordRequest;
+import com.app.spendeasyjava.domain.requests.ChangePasswordRequest;
 import com.app.spendeasyjava.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

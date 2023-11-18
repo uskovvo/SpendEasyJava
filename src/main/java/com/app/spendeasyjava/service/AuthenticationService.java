@@ -1,12 +1,12 @@
 package com.app.spendeasyjava.service;
 
 import com.app.spendeasyjava.config.JwtService;
-import com.app.spendeasyjava.domain.DTO.AuthenticationRequest;
-import com.app.spendeasyjava.domain.DTO.AuthenticationResponse;
-import com.app.spendeasyjava.domain.DTO.RegisterRequest;
+import com.app.spendeasyjava.domain.enums.Role;
+import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
+import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
+import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.domain.entities.Token;
 import com.app.spendeasyjava.domain.entities.User;
-import com.app.spendeasyjava.domain.enums.Role;
 import com.app.spendeasyjava.domain.enums.TokenType;
 import com.app.spendeasyjava.domain.repositories.TokenRepository;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+
+import static com.app.spendeasyjava.domain.enums.Role.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +36,20 @@ public class AuthenticationService {
     private final CategoriesServiceImpl categoriesService;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (request.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(request.getRole() != null ? request.getRole() : USER)
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        savedUser.setCategories(categoriesService.createDefaultCategories(user));
+        categoriesService.createDefaultCategories(savedUser);
         userRepository.save(savedUser);
 
         return AuthenticationResponse.builder()

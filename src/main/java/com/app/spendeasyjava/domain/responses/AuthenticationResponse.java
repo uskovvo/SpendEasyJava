@@ -1,4 +1,4 @@
-package com.app.spendeasyjava.domain.DTO;
+package com.app.spendeasyjava.domain.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.app.spendeasyjava.controllers;
 
-import com.app.spendeasyjava.domain.DTO.AuthenticationRequest;
-import com.app.spendeasyjava.domain.DTO.AuthenticationResponse;
-import com.app.spendeasyjava.domain.DTO.RegisterRequest;
+import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
+import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
+import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,8 +23,14 @@ public class AuthenticationController {
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok("Success");
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try{
+            authService.register(request);
+            return ResponseEntity.ok("Success");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/login")

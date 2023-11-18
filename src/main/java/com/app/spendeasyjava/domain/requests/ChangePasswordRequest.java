@@ -1,4 +1,4 @@
-package com.app.spendeasyjava.domain.DTO;
+package com.app.spendeasyjava.domain.requests;
 
 import lombok.Builder;
 import lombok.Getter;

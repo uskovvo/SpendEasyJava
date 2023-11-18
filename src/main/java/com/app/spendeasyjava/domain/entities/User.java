@@ -2,6 +2,7 @@ package com.app.spendeasyjava.domain.entities;
 
 import com.app.spendeasyjava.domain.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
+    @Email
     private String email;
     private String password;
 
@@ -40,7 +42,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Transactions> transactions;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Categories> categories;
 
     @OneToMany(mappedBy = "user")

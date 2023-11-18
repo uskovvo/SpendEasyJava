@@ -1,7 +1,6 @@
 package com.app.spendeasyjava;
 
-import com.app.spendeasyjava.domain.DTO.RegisterRequest;
-import com.app.spendeasyjava.domain.enums.Role;
+import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.service.AuthenticationService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

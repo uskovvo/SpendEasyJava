@@ -1,4 +1,4 @@
-package com.app.spendeasyjava.domain.DTO;
+package com.app.spendeasyjava.domain.requests;
 
 import com.app.spendeasyjava.domain.enums.Role;
 import lombok.AllArgsConstructor;
