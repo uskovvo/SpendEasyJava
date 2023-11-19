@@ -10,6 +10,7 @@ import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.enums.TokenType;
 import com.app.spendeasyjava.domain.repositories.TokenRepository;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
+import com.app.spendeasyjava.domain.responses.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final CategoriesServiceImpl categoriesService;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public Response register(RegisterRequest request) {
         if (request.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty");
         }
@@ -52,10 +53,7 @@ public class AuthenticationService {
         categoriesService.createDefaultCategories(savedUser);
         userRepository.save(savedUser);
 
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return new Response("Success", user.getId());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

@@ -1,6 +1,8 @@
 package com.app.spendeasyjava;
 
+import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
 import com.app.spendeasyjava.domain.requests.RegisterRequest;
+import com.app.spendeasyjava.domain.responses.Response;
 import com.app.spendeasyjava.service.AuthenticationService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +29,15 @@ public class SpendEasyJavaApplication {
                     .password("admin")
                     .role(ADMIN)
                     .build();
-            System.out.println("Admin token: " + service.register(admin).getAccessToken());
+            Response responseAdmin = service.register(admin);
+            if(responseAdmin.getResult().equals("Success")) {
+                AuthenticationRequest request = AuthenticationRequest
+                        .builder()
+                        .email("admin@admin.com")
+                        .password("admin")
+                        .build();
+                System.out.println("Admin authorized: " + service.authenticate(request).getAccessToken());
+            }
 
             var manager = RegisterRequest
                     .builder()
@@ -36,7 +46,15 @@ public class SpendEasyJavaApplication {
                     .password("manager")
                     .role(MANAGER)
                     .build();
-            System.out.println("Manager token: " + service.register(manager).getAccessToken());
+            Response responseManager = service.register(manager);
+            if(responseManager.getResult().equals("Success")) {
+                AuthenticationRequest request = AuthenticationRequest
+                        .builder()
+                        .email("manager@manager.com")
+                        .password("manager")
+                        .build();
+                System.out.println("Manager authorized: " + service.authenticate(request).getAccessToken());
+            }
         };
     }
 
