@@ -2,7 +2,7 @@ package com.app.spendeasyjava.domain.entities;
 
 import com.app.spendeasyjava.domain.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
-    @Email
+    @Email(message = "The username must be in email format.")
     private String email;
     private String password;
 

@@ -26,7 +26,8 @@ public class SpendEasyJavaApplication {
                     .builder()
                     .name("Admin")
                     .email("admin@admin.com")
-                    .password("admin")
+                    .password("Admin1=")
+                    .confirmPassword("Admin1=")
                     .role(ADMIN)
                     .build();
             Response responseAdmin = service.register(admin);
@@ -34,7 +35,7 @@ public class SpendEasyJavaApplication {
                 AuthenticationRequest request = AuthenticationRequest
                         .builder()
                         .email("admin@admin.com")
-                        .password("admin")
+                        .password("Admin1=")
                         .build();
                 System.out.println("Admin authorized: " + service.authenticate(request).getAccessToken());
             }
@@ -43,7 +44,8 @@ public class SpendEasyJavaApplication {
                     .builder()
                     .name("Manager")
                     .email("manager@manager.com")
-                    .password("manager")
+                    .password("Manager1=")
+                    .confirmPassword("Manager1=")
                     .role(MANAGER)
                     .build();
             Response responseManager = service.register(manager);
@@ -51,7 +53,7 @@ public class SpendEasyJavaApplication {
                 AuthenticationRequest request = AuthenticationRequest
                         .builder()
                         .email("manager@manager.com")
-                        .password("manager")
+                        .password("Manager1=")
                         .build();
                 System.out.println("Manager authorized: " + service.authenticate(request).getAccessToken());
             }
