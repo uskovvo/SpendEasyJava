@@ -15,6 +15,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT c FROM Categories c WHERE c.user.id = :userId")
-    List<Categories> findCategoriesByUserId(UUID userId);
 }

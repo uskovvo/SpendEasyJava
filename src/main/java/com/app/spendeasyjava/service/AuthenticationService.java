@@ -1,38 +1,26 @@
 package com.app.spendeasyjava.service;
 
-import ch.qos.logback.core.spi.ErrorCodes;
-import ch.qos.logback.core.status.ErrorStatus;
 import com.app.spendeasyjava.config.JwtService;
-import com.app.spendeasyjava.domain.enums.Role;
-import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
-import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
-import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.domain.entities.Token;
 import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.enums.TokenType;
 import com.app.spendeasyjava.domain.repositories.TokenRepository;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
+import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
+import com.app.spendeasyjava.domain.requests.RegisterRequest;
+import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
 import com.app.spendeasyjava.domain.responses.Response;
-import com.app.spendeasyjava.exceptions.PasswordValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.app.spendeasyjava.domain.enums.Role.USER;
 
@@ -47,23 +35,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final CategoriesServiceImpl categoriesService;
 
-    public Response register(RegisterRequest request) throws MethodArgumentNotValidException {
-        PasswordValidator.validatePassword(request.getPassword(), request.getConfirmPassword());
-//        if (request.getPassword().length() < 6) {
-//            BindingResult bindingResult = new BeanPropertyBindingResult(request, "registerRequest");
-//            bindingResult.rejectValue("password", "password.length", "Password should be longer than 6 characters");
-//            throw new MethodArgumentNotValidException((MethodParameter) null, bindingResult);
-//        }
-//        if (!isRequestHasSpecialSymbols(request.getPassword())) {
-//            BindingResult bindingResult = new BeanPropertyBindingResult(request, "registerRequest");
-//            bindingResult.rejectValue("password", "password.hasDigitAndSpecialSymbols", "Password should have special symbols");
-//            throw new MethodArgumentNotValidException((MethodParameter) null, bindingResult);
-//        }
-//        if (!request.getPassword().equals(request.getConfirmPassword())) {
-//            BindingResult bindingResult = new BeanPropertyBindingResult(request, "registerRequest");
-//            bindingResult.rejectValue("confirmPassword", "password.mismatch", "Passwords do not match");
-//            throw new MethodArgumentNotValidException((MethodParameter) null, bindingResult);
-//        }
+    public Response register(RegisterRequest request) {
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))

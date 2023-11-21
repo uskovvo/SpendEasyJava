@@ -1,8 +1,9 @@
 package com.app.spendeasyjava.domain.entities;
 
 import com.app.spendeasyjava.domain.enums.Role;
+import com.app.spendeasyjava.exceptions.ValidUsername;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +31,6 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
-    @Email(message = "The username must be in email format.")
     private String email;
     private String password;
 

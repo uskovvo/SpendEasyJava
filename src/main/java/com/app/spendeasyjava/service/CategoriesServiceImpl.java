@@ -8,12 +8,9 @@ import com.app.spendeasyjava.domain.enums.CategoriesType;
 import com.app.spendeasyjava.domain.enums.DefaultCategories;
 import com.app.spendeasyjava.domain.repositories.CategoriesRepository;
 import com.app.spendeasyjava.domain.requests.UpdateCategoryRequest;
-import com.app.spendeasyjava.domain.responses.Response;
 import com.app.spendeasyjava.service.interfaces.CategoriesService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;

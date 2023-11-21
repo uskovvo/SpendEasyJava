@@ -1,19 +1,20 @@
 package com.app.spendeasyjava.controllers;
 
 import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
-import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
 import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.domain.responses.Response;
 import com.app.spendeasyjava.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
@@ -26,6 +27,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest request) throws MethodArgumentNotValidException {
+//        PasswordValidator.validatePassword(request.getPassword(), request.getConfirmPassword());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(authService.register(request));
