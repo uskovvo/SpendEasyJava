@@ -11,6 +11,7 @@ import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
 import com.app.spendeasyjava.domain.responses.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

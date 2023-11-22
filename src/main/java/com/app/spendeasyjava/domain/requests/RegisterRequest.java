@@ -15,14 +15,13 @@ import org.springframework.validation.annotation.Validated;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidUsername
 @ValidPassword
 @Validated
 public class RegisterRequest {
 
     private String name;
     @NotNull
-    @ValidUsername
-    @Email(message = "The username must be in email format.")
     private String email;
     private String password;
     @NotNull

@@ -5,7 +5,6 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.ElementType.TYPE_USE;
 
 @Documented
 @Constraint(validatedBy = PasswordValidator.class)
@@ -29,6 +27,9 @@ public @interface ValidPassword {
 }
 
 class PasswordValidator implements ConstraintValidator<ValidPassword, RegisterRequest> {
+    private final String PASSWORD = "password";
+    private final String CONFIRM_PASSWORD = "confirmPassword";
+    private final String REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).*$";
 
     @Override
     public void initialize(ValidPassword constraintAnnotation) {
@@ -39,15 +40,15 @@ class PasswordValidator implements ConstraintValidator<ValidPassword, RegisterRe
     public boolean isValid(RegisterRequest value, ConstraintValidatorContext context) {
 
         if (value.getPassword().length() < 6) {
-            addConstraintViolation(context, "password", "{valid.password.length.message}");
+            addConstraintViolation(context, PASSWORD, "{valid.password.length.message}");
             return false;
         }
         if (!isPasswordHasSpecialSymbols(value.getPassword())) {
-            addConstraintViolation(context, "password", "{valid.password.symbols.message}");
+            addConstraintViolation(context, PASSWORD, "{valid.password.symbols.message}");
             return false;
         }
         if (!value.getPassword().equals(value.getConfirmPassword())) {
-            addConstraintViolation(context, "confirmPassword", "{valid.password.not_match.message}");
+            addConstraintViolation(context, CONFIRM_PASSWORD, "{valid.password.not_match.message}");
             return false;
         }
 
@@ -62,9 +63,8 @@ class PasswordValidator implements ConstraintValidator<ValidPassword, RegisterRe
                 .addConstraintViolation();
     }
 
-    private static boolean isPasswordHasSpecialSymbols(String password) {
-        String regex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).*$";
-        Pattern pattern = Pattern.compile(regex);
+    private boolean isPasswordHasSpecialSymbols(String password) {
+        Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(password);
         return matcher.find();
     }
