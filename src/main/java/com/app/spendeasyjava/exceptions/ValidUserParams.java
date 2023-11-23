@@ -1,5 +1,6 @@
 package com.app.spendeasyjava.exceptions;
 
+import com.app.spendeasyjava.domain.enums.Messages;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
 import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import jakarta.validation.Constraint;
@@ -7,11 +8,13 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,11 +35,14 @@ public @interface ValidUserParams {
 @RequiredArgsConstructor
 class UserParamsValidator implements ConstraintValidator<ValidUserParams, RegisterRequest> {
     private final UserRepository userRepository;
+    private final MessageSource messageSource;
     private final String PASSWORD = "password";
     private final String CONFIRM_PASSWORD = "confirmPassword";
     private final String REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).*$";
-    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+    private final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private final String ALLOWED_EMAIL_REGEX = "^[a-zA-Z0-9._%+-@]+$";
+    private final Pattern validEmailPattern = Pattern.compile(EMAIL_REGEX);
+    private final Pattern allowedEmailPattern = Pattern.compile(ALLOWED_EMAIL_REGEX);
 
     @Override
     public void initialize(ValidUserParams constraintAnnotation) {
@@ -45,10 +51,18 @@ class UserParamsValidator implements ConstraintValidator<ValidUserParams, Regist
 
     @Override
     public boolean isValid(RegisterRequest value, ConstraintValidatorContext context) {
-        if (!pattern.matcher(value.getEmail()).matches()) {
+        if (!allowedEmailPattern.matcher(value.getEmail()).matches()) {
             context.disableDefaultConstraintViolation();
             context
-                    .buildConstraintViolationWithTemplate("{valid.username.not_email}")
+                    .buildConstraintViolationWithTemplate(messageSource.getMessage(Messages.INVALID_EMAIL.getMessage(), null, Locale.getDefault()))
+                    .addPropertyNode("email")
+                    .addConstraintViolation();
+            return false;
+        }
+        if (!validEmailPattern.matcher(value.getEmail()).matches()) {
+            context.disableDefaultConstraintViolation();
+            context
+                    .buildConstraintViolationWithTemplate(messageSource.getMessage(Messages.NOT_EMAIL_FORMAT.getMessage(), null, Locale.getDefault()))
                     .addPropertyNode("email")
                     .addConstraintViolation();
             return false;
@@ -56,22 +70,22 @@ class UserParamsValidator implements ConstraintValidator<ValidUserParams, Regist
         if (userRepository.findByEmail(value.getEmail()).isPresent()) {
             context.disableDefaultConstraintViolation();
             context
-                    .buildConstraintViolationWithTemplate("{valid.username.already_exists}")
+                    .buildConstraintViolationWithTemplate(messageSource.getMessage(Messages.USER_ALREADY_EXISTS.getMessage(), null, Locale.getDefault()))
                     .addPropertyNode("email")
                     .addConstraintViolation();
             return false;
         }
 
         if (value.getPassword().length() < 6) {
-            addConstraintViolation(context, PASSWORD, "{valid.password.length.message}");
+            addConstraintViolation(context, PASSWORD, messageSource.getMessage(Messages.SHORT_PASS.getMessage(), null, Locale.getDefault()));
             return false;
         }
         if (!isPasswordHasSpecialSymbols(value.getPassword())) {
-            addConstraintViolation(context, PASSWORD, "{valid.password.symbols.message}");
+            addConstraintViolation(context, PASSWORD, messageSource.getMessage(Messages.PASS_WITHOUT_SYMB.getMessage(), null, Locale.getDefault()));
             return false;
         }
         if (!value.getPassword().equals(value.getConfirmPassword())) {
-            addConstraintViolation(context, CONFIRM_PASSWORD, "{valid.password.not_match.message}");
+            addConstraintViolation(context, CONFIRM_PASSWORD, messageSource.getMessage(Messages.NOT_MATCHES_PASS.getMessage(), null, Locale.getDefault()));
             return false;
         }
 

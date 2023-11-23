@@ -59,11 +59,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesDTO updateCategory(UUID categoryId, UpdateCategoryRequest updateCategoryRequest) {
-        Categories category = categoriesRepository
-                .findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Category not found"
-                ));
+        Categories category = categoriesRepository.findById(categoryId)
+                .orElseThrow(EntityNotFoundException::new);
         category.setName(updateCategoryRequest.getName());
         categoriesRepository.save(category);
         return CategoriesDTO.toDto(category);
@@ -71,7 +68,10 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public void deleteCategory(UUID categoryId) {
-
+        categoriesRepository
+                .delete(categoriesRepository
+                        .findById(categoryId)
+                        .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
@@ -80,9 +80,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     public CategoriesDTO getCategoryById(UUID categoryId) {
-        Categories category = categoriesRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-
-        return CategoriesDTO.toDto(category);
+        return CategoriesDTO
+                .toDto(categoriesRepository
+                        .findById(categoryId)
+                        .orElseThrow(EntityNotFoundException::new));
     }
 }
