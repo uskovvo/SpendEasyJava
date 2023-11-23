@@ -1,7 +1,6 @@
 package com.app.spendeasyjava.domain.entities;
 
 import com.app.spendeasyjava.domain.enums.CategoriesType;
-import com.app.spendeasyjava.domain.enums.DefaultCategories;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity

@@ -1,7 +1,6 @@
 package com.app.spendeasyjava.controllers;
 
 import com.app.spendeasyjava.domain.DTO.CategoriesDTO;
-import com.app.spendeasyjava.domain.entities.Categories;
 import com.app.spendeasyjava.domain.requests.UpdateCategoryRequest;
 import com.app.spendeasyjava.domain.responses.Response;
 import com.app.spendeasyjava.service.CategoriesServiceImpl;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

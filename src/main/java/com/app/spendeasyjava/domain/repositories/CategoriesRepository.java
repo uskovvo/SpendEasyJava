@@ -3,7 +3,6 @@ package com.app.spendeasyjava.domain.repositories;
 import com.app.spendeasyjava.domain.entities.Categories;
 import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.enums.CategoriesType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

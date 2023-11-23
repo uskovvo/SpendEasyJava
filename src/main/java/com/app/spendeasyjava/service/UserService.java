@@ -1,8 +1,8 @@
 package com.app.spendeasyjava.service;
 
-import com.app.spendeasyjava.domain.requests.ChangePasswordRequest;
 import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
+import com.app.spendeasyjava.domain.requests.ChangePasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

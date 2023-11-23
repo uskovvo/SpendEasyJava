@@ -1,16 +1,17 @@
 package com.app.spendeasyjava.service;
 
 import com.app.spendeasyjava.config.JwtService;
-import com.app.spendeasyjava.domain.enums.Role;
-import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
-import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
-import com.app.spendeasyjava.domain.requests.RegisterRequest;
 import com.app.spendeasyjava.domain.entities.Token;
 import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.enums.TokenType;
 import com.app.spendeasyjava.domain.repositories.TokenRepository;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
+import com.app.spendeasyjava.domain.requests.AuthenticationRequest;
+import com.app.spendeasyjava.domain.requests.RegisterRequest;
+import com.app.spendeasyjava.domain.responses.AuthenticationResponse;
+import com.app.spendeasyjava.domain.responses.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,27 +36,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final CategoriesServiceImpl categoriesService;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        if (request.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
+    public Response register(RegisterRequest request) {
         var user = User.builder()
-                .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole() != null ? request.getRole() : USER)
+                .role(USER)
                 .build();
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
         categoriesService.createDefaultCategories(savedUser);
         userRepository.save(savedUser);
 
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return new Response("Success", user.getId());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
