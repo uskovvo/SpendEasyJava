@@ -1,11 +1,12 @@
 package com.app.spendeasyjava.exceptions;
 
+import com.app.spendeasyjava.domain.enums.Messages;
 import com.app.spendeasyjava.domain.responses.Response;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Locale;
 
 @RestControllerAdvice
 @Slf4j
@@ -47,7 +50,11 @@ public class CustomExceptions {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        String message = messageSource.getMessage("valid.authorization.wrong", null, LocaleContextHolder.getLocale());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(messageSource.getMessage(
+                        Messages.WRONG_AUTH.getMessage(),
+                        null,
+                        Locale.getDefault()));
     }
 }
