@@ -3,6 +3,7 @@ package com.app.spendeasyjava.service;
 import com.app.spendeasyjava.config.JwtService;
 import com.app.spendeasyjava.domain.entities.Token;
 import com.app.spendeasyjava.domain.entities.User;
+import com.app.spendeasyjava.domain.enums.Role;
 import com.app.spendeasyjava.domain.enums.TokenType;
 import com.app.spendeasyjava.domain.repositories.TokenRepository;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
@@ -40,7 +41,7 @@ public class AuthenticationService {
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(USER)
+                .role(request.getRole() != null ? request.getRole() : USER)
                 .build();
         var savedUser = userRepository.save(user);
         categoriesService.createDefaultCategories(savedUser);
