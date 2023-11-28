@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -27,8 +28,8 @@ public class Transactions {
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
-    private Long amount;
-    private LocalDateTime dateTime;
+    private BigDecimal amount;
+    private LocalDateTime createDateTime;
     private String description;
 
     @ManyToOne

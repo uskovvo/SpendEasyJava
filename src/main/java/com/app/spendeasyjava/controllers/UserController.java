@@ -3,9 +3,7 @@ package com.app.spendeasyjava.controllers;
 import com.app.spendeasyjava.domain.enums.Messages;
 import com.app.spendeasyjava.domain.requests.ChangePasswordRequest;
 import com.app.spendeasyjava.domain.responses.Response;
-import com.app.spendeasyjava.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
+import com.app.spendeasyjava.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -21,15 +19,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final MessageSource messageSource;
+
+    @GetMapping("/user-profile")
+    public ResponseEntity<?> getUserProfile(Principal connectedUser) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response(HttpStatus.OK.name(), userServiceImpl.getUserProfile(connectedUser)));
+    }
 
     @GetMapping
     public ResponseEntity<?> getAllUsers(Principal connectedUser) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new Response(HttpStatus.OK.name(), userService.getAllUsers(connectedUser)));
+                    .body(new Response(HttpStatus.OK.name(), userServiceImpl.getAllUsers(connectedUser)));
         } catch (IllegalAccessException ex) {
             return ResponseEntity
                     .status(HttpStatus.NOT_ACCEPTABLE)
@@ -43,14 +48,14 @@ public class UserController {
             Principal connectedUser
     )
     {
-        userService.changePassword(request, connectedUser);
+        userServiceImpl.changePassword(request, connectedUser);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@RequestParam UUID userId, Principal connectedUser) {
         try {
-            userService.deleteUser(userId, connectedUser);
+            userServiceImpl.deleteUser(userId, connectedUser);
             return ResponseEntity.ok(messageSource.getMessage(Messages.DELETED.getMessage(), null, Locale.getDefault()));
         } catch (IllegalAccessException ex) {
             return ResponseEntity

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class Accounts {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
-    private Long balance;
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "currency_type", nullable = false)

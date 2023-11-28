@@ -23,8 +23,9 @@ import java.util.UUID;
 public class CategoriesServiceImpl implements CategoriesService {
 
     private final CategoriesRepository categoriesRepository;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
+    @Override
     public void createDefaultCategories(User user) {
         for (DefaultCategories defaultCategory : DefaultCategories.values()) {
             Categories category = Categories.builder()
@@ -37,8 +38,9 @@ public class CategoriesServiceImpl implements CategoriesService {
         }
     }
 
+    @Override
     public List<CategoriesDTO> getAllCategories(Principal connectedUser) {
-        User user = userService.getUser(connectedUser);
+        User user = userServiceImpl.getUser(connectedUser);
         List<CategoriesDTO> categoriesDTOList = new ArrayList<>();
         categoriesRepository.findAllByUser(user).forEach(c -> categoriesDTOList.add(CategoriesDTO.toDto(c)));
         return categoriesDTOList;
@@ -46,7 +48,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesDTO createCustomCategory(Principal authUser, String nameCategory) {
-        User user = userService.getUser(authUser);
+        User user = userServiceImpl.getUser(authUser);
         Categories category = Categories
                 .builder()
                 .name(nameCategory)
@@ -58,12 +60,12 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     @Override
-    public CategoriesDTO updateCategory(UUID categoryId, UpdateCategoryRequest updateCategoryRequest) {
+    public void updateCategory(UUID categoryId, UpdateCategoryRequest updateCategoryRequest) {
         Categories category = categoriesRepository.findById(categoryId)
                 .orElseThrow(EntityNotFoundException::new);
         category.setName(updateCategoryRequest.getName());
         categoriesRepository.save(category);
-        return CategoriesDTO.toDto(category);
+        CategoriesDTO.toDto(category);
     }
 
     @Override
@@ -79,10 +81,17 @@ public class CategoriesServiceImpl implements CategoriesService {
         return null;
     }
 
-    public CategoriesDTO getCategoryById(UUID categoryId) {
-        return CategoriesDTO
-                .toDto(categoriesRepository
+    @Override
+    public Categories getCategoryById(UUID categoryId) {
+        return categoriesRepository
                         .findById(categoryId)
-                        .orElseThrow(EntityNotFoundException::new));
+                        .orElseThrow(EntityNotFoundException::new);
+    }
+
+
+    //TODO: Добавить корректное сообщение в exception
+    @Override
+    public Categories getCategoryByUserAndByName(String categoryName, User user) {
+        return categoriesRepository.findByNameAndUser(categoryName, user).orElseThrow(() -> new EntityNotFoundException(categoryName));
     }
 }

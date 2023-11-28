@@ -33,8 +33,10 @@ public class CategoriesController {
     @GetMapping("/{categoryId}")
     public ResponseEntity<?> getCategoryById(@PathVariable UUID categoryId) {
         try {
-            CategoriesDTO categoriesDTO = categoriesService.getCategoryById(categoryId);
-            return ResponseEntity.ok(categoriesDTO);
+            return ResponseEntity
+                    .ok(CategoriesDTO
+                            .toDto(categoriesService
+                                    .getCategoryById(categoryId)));
         } catch (EntityNotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

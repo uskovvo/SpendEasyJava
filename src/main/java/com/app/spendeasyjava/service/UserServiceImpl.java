@@ -4,6 +4,7 @@ import com.app.spendeasyjava.domain.DTO.UserDTO;
 import com.app.spendeasyjava.domain.entities.User;
 import com.app.spendeasyjava.domain.repositories.UserRepository;
 import com.app.spendeasyjava.domain.requests.ChangePasswordRequest;
+import com.app.spendeasyjava.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
@@ -21,12 +22,13 @@ import static com.app.spendeasyjava.domain.enums.Role.ADMIN;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final MessageSource messageSource;
 
+    @Override
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
         var user = getAuthUser(connectedUser);
 
@@ -34,10 +36,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public UserDTO getUserProfile(Principal connectedUser) {
         return UserDTO.toDto(getAuthUser(connectedUser));
     }
 
+    @Override
     public void deleteUser(UUID userId, Principal connectedUser) throws IllegalAccessException {
         User user = getAuthUser(connectedUser);
         if (user.getRole() != ADMIN) {
@@ -47,6 +51,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
     public User getUser(Principal connectedUser) {
         return getAuthUser(connectedUser);
     }
@@ -62,6 +67,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     public List<UserDTO> getAllUsers(Principal connectedUser) throws IllegalAccessException {
         User user = getAuthUser(connectedUser);
         if (user.getRole() != ADMIN) {
