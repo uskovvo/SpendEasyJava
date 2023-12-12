@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,5 +64,10 @@ public class TransactionsServiceImpl implements TransactionsService {
     public List<TransactionDto> getAllTransactionsByUser(Principal connectedUser) {
         User user = userService.getUser(connectedUser);
         return transactionsRepository.findAllByUser(user).stream().map(TransactionDto::toDto).collect(Collectors.toList());
+    }
+
+    public BigDecimal getUsersExpenseTotalAmount(Principal connectedUser) {
+        User user = userService.getUser(connectedUser);
+        return transactionsRepository.getTotalAmount(user);
     }
 }

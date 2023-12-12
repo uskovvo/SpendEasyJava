@@ -36,11 +36,27 @@ public class TransactionController {
                         transactionsService.getAllTransactionsByCategory(categoryId)));
     }
 
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<?> getTransactionById(@PathVariable UUID transactionId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response(HttpStatus.OK.name(),
+                        transactionsService.getTransactionById(transactionId)));
+    }
+
     @PostMapping
     public ResponseEntity<?> createNewTransaction(TransactionRequest transactionRequest, Principal connectedUser) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new Response(HttpStatus.OK.name(),
                         transactionsService.createNewTransaction(transactionRequest, connectedUser)));
+    }
+
+    @GetMapping("/total_amount")
+    public ResponseEntity<?> getUsersExpenseTotalAmount(Principal connectedUser) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response(HttpStatus.OK.name(),
+                        transactionsService.getUsersExpenseTotalAmount(connectedUser)));
     }
 }
